@@ -3,8 +3,8 @@ import type { Product, ProductCriteria, ProductRepository } from '../../domain/m
 export class ApiProductRepository implements ProductRepository {
   private baseUrl: string;
 
-  constructor(baseUrl: string = 'http://localhost:3000/api') {
-    this.baseUrl = baseUrl;
+  constructor(baseUrl?: string) {
+    this.baseUrl = baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
   }
 
   async getProducts(criteria?: ProductCriteria): Promise<Product[]> {
