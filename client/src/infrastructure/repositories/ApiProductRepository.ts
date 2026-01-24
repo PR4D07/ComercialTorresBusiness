@@ -4,7 +4,21 @@ export class ApiProductRepository implements ProductRepository {
   private baseUrl: string;
 
   constructor(baseUrl?: string) {
-    this.baseUrl = baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    let url = baseUrl || import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+    
+    // Remove trailing slash if present
+    if (url.endsWith('/')) {
+      url = url.slice(0, -1);
+    }
+
+    // Append /api if not present and not localhost (localhost default already has it)
+    // We assume that if the user provides a production URL like onrender.com, it should end with /api
+    // This is a heuristic to fix common configuration errors
+    if (!url.endsWith('/api') && !url.includes('localhost')) {
+      url += '/api';
+    }
+
+    this.baseUrl = url;
   }
 
   async getProducts(criteria?: ProductCriteria): Promise<Product[]> {
