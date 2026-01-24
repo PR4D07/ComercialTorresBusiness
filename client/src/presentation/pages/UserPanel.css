@@ -1,0 +1,193 @@
+.user-panel-page {
+  display: flex;
+  gap: 30px;
+  padding: 40px 20px;
+  min-height: 600px;
+}
+
+.user-sidebar {
+  width: 250px;
+  background: #f9f9f9;
+  border-radius: 8px;
+  padding: 20px;
+  height: fit-content;
+}
+
+.user-info-summary {
+  text-align: center;
+  margin-bottom: 30px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid #eee;
+}
+
+.avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  background: #e3000f;
+  color: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0 auto 10px;
+}
+
+.avatar-img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  margin: 0 auto 10px;
+  display: block;
+}
+
+.user-nav button {
+  display: block;
+  width: 100%;
+  text-align: left;
+  padding: 12px 15px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  border-radius: 4px;
+  margin-bottom: 5px;
+  transition: background 0.2s;
+  color: #333;
+}
+/* ... rest of existing CSS ... */
+.user-nav button:hover, .user-nav button.active {
+  background: #fff;
+  font-weight: bold;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+.user-nav button i {
+  width: 25px;
+  color: #666;
+}
+
+.logout-btn {
+  margin-top: 20px;
+  color: #e3000f !important;
+}
+
+.logout-btn i {
+  color: #e3000f !important;
+}
+
+.user-content {
+  flex: 1;
+  background: #fff;
+  border: 1px solid #eee;
+  border-radius: 8px;
+  padding: 30px;
+}
+
+.panel-section h2 {
+  margin-bottom: 25px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid #eee;
+}
+
+/* Forms */
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: 500;
+  color: #666;
+}
+
+.form-group input {
+  width: 100%;
+  padding: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.btn-save {
+  background: #000;
+  color: #fff;
+  border: none;
+  padding: 12px 25px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Orders */
+.order-card {
+  border: 1px solid #eee;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.order-status {
+  padding: 4px 8px;
+  border-radius: 12px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+.order-status.entregado { background: #e6f4ea; color: #1e7e34; }
+.order-status.en-camino { background: #e8f0fe; color: #1967d2; }
+
+.btn-view-order {
+  padding: 5px 15px;
+  border: 1px solid #ddd;
+  background: #fff;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* Addresses */
+.address-card {
+  display: flex;
+  align-items: center;
+  border: 1px solid #eee;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 15px;
+}
+
+.address-icon {
+  width: 40px;
+  height: 40px;
+  background: #f4f4f4;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 15px;
+}
+
+.address-info {
+  flex: 1;
+}
+
+.address-actions button {
+  margin-left: 10px;
+  background: none;
+  border: none;
+  color: #666;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+.btn-add-address {
+  width: 100%;
+  padding: 15px;
+  border: 2px dashed #ddd;
+  background: #fafafa;
+  color: #666;
+  cursor: pointer;
+  border-radius: 4px;
+}
