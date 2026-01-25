@@ -4,6 +4,7 @@ import Footer from './presentation/components/layout/Footer';
 import HomePage from './presentation/pages/HomePage';
 import UserPanelPage from './presentation/pages/UserPanelPage';
 import LoginPage from './presentation/pages/LoginPage';
+import AboutPage from './presentation/pages/AboutPage';
 import CartSidebar from './presentation/components/cart/CartSidebar';
 import { CartProvider } from './presentation/context/CartContext';
 import { FilterProvider } from './presentation/context/FilterContext';

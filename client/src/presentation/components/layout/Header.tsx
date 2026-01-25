@@ -62,6 +62,7 @@ export default function Header() {
             <li><Link to="/" className={category === 'MUJER' ? 'active' : ''} onClick={() => handleCategory('MUJER')}>MUJER</Link></li>
             <li><Link to="/" className={category === 'HOMBRE' ? 'active' : ''} onClick={() => handleCategory('HOMBRE')}>HOMBRE</Link></li>
             <li><Link to="/" className={category === 'INFANTIL' ? 'active' : ''} onClick={() => handleCategory('INFANTIL')}>INFANTIL</Link></li>
+            <li><Link to="/about">NOSOTROS</Link></li>
           </ul>
         </div>
       </nav>
