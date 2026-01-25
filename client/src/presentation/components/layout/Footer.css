@@ -58,7 +58,7 @@
 }
 
 .footer-section ul li a:hover {
-  color: var(--primary-red);
+  color: var(--secondary-color);
   padding-left: 5px;
 }
 
@@ -81,7 +81,7 @@
 }
 
 .footer-socials a:hover {
-  background-color: var(--primary-red);
+  background-color: var(--secondary-color);
   transform: translateY(-3px);
 }
 

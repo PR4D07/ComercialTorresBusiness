@@ -8,6 +8,7 @@ export interface Product {
     type: 'discount' | 'new';
     text: string;
   };
+  imageUrl?: string;
 }
 
 export interface ProductCriteria {

@@ -15,7 +15,11 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         </div>
       )}
       <div className="product-image">
-        <div className="img-placeholder"></div>
+        {product.imageUrl ? (
+          <img src={product.imageUrl} alt={product.name} className="img-fluid" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+        ) : (
+          <div className="img-placeholder"></div>
+        )}
       </div>
       <div className="product-info">
         <span className="brand">{product.brand}</span>

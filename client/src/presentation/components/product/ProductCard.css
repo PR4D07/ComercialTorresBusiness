@@ -21,7 +21,7 @@
   z-index: 10;
 }
 
-.badge.discount { background-color: #e3000f; }
+.badge.discount { background-color: var(--primary-color); }
 .badge.new { background-color: #000; }
 
 .product-image {

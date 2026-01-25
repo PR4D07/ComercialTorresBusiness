@@ -21,10 +21,14 @@
 }
 
 .logo a {
-  font-size: 32px;
-  font-weight: 900;
-  color: var(--primary-red);
-  letter-spacing: -1px;
+  display: flex;
+  align-items: center;
+}
+
+.logo img {
+  height: 50px;
+  width: auto;
+  object-fit: contain;
 }
 
 .search-bar {
@@ -88,7 +92,7 @@
 }
 
 .main-nav a:hover {
-  color: var(--primary-red);
+  color: var(--primary-color);
 }
 
 .main-nav a::after {

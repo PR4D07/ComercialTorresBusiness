@@ -91,7 +91,7 @@
 
 .checkout-btn {
   width: 100%;
-  background-color: #e3000f;
+  background-color: var(--primary-color);
   color: #fff;
   padding: 12px;
   border: none;

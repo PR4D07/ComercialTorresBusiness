@@ -249,7 +249,7 @@ export default function LoginPage() {
             </div>
     
             <button 
-              className="google-btn"
+              className="btn-google"
               onClick={handleGoogleLogin}
             >
               <img src="https://www.gstatic.com/firebasejs/ui/2.0.0/images/auth/google.svg" alt="Google" />

@@ -25,7 +25,9 @@ export default function Header() {
       <header className="main-header">
         <div className="container header-content">
           <div className="logo">
-            <Link to="/" onClick={() => handleCategory('')}>COMERCIAL TORRES</Link>
+            <Link to="/" onClick={() => handleCategory('')}>
+              <img src="/logo.png" alt="Comercial Torres" />
+            </Link>
           </div>
 
           <div className="search-bar">
