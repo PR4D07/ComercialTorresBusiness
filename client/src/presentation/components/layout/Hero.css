@@ -1,0 +1,32 @@
+.hero-banner {
+  background-color: #f0f0f0;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  margin-bottom: 40px;
+  background-image: linear-gradient(rgba(0,0,0,0.1), rgba(0,0,0,0.1));
+}
+
+.hero-content h2 {
+  font-size: 48px;
+  margin-bottom: 10px;
+  font-weight: 900;
+}
+
+.btn-primary {
+  display: inline-block;
+  background-color: var(--primary-red);
+  color: #fff;
+  padding: 12px 30px;
+  margin-top: 20px;
+  font-weight: 700;
+  text-transform: uppercase;
+  border-radius: 4px;
+  transition: background-color 0.3s;
+}
+
+.btn-primary:hover {
+  background-color: #b0000b;
+}
