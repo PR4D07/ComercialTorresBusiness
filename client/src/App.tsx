@@ -24,6 +24,7 @@ function App() {
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profile" element={<UserPanelPage />} />
                 <Route path="/login" element={<LoginPage />} />
+                <Route path="/about" element={<AboutPage />} />
               </Routes>
               <Footer />
             </div>
