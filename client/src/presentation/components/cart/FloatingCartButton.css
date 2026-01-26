@@ -15,7 +15,16 @@
   font-size: 1.5rem;
   cursor: pointer;
   z-index: 1000;
-  transition: transform 0.3s ease, background-color 0.3s ease;
+  transition: right 0.3s ease-in-out, transform 0.3s ease, background-color 0.3s ease;
+}
+
+.floating-cart-btn.shifted {
+  right: calc(350px + 2rem);
+  background-color: #333; /* Dark background when open acting as close button */
+}
+
+.floating-cart-btn.shifted:hover {
+  background-color: #000;
 }
 
 .floating-cart-btn:hover {
@@ -47,5 +56,9 @@
     width: 50px;
     height: 50px;
     font-size: 1.2rem;
+  }
+  
+  .floating-cart-btn.shifted {
+    right: calc(350px + 1.5rem); /* Sidebar width is still 350px on mobile? Check CartSidebar.css */
   }
 }
