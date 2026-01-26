@@ -5,7 +5,7 @@ import { useFilter } from '../../context/FilterContext';
 import { useAuth } from '../../context/AuthContext';
 
 export default function Header() {
-  const { count, toggleCart } = useCart();
+  const { toggleCart } = useCart();
   const { setSearch, setCategory, category } = useFilter();
   const { user } = useAuth();
   
@@ -52,7 +52,7 @@ export default function Header() {
             
             <a href="#" onClick={(e) => { e.preventDefault(); toggleCart(); }}>
               <i className="fas fa-shopping-bag"></i> 
-              <span>Carrito ({count})</span>
+              <span>Carrito</span>
             </a>
           </div>
         </div>

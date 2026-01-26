@@ -7,6 +7,7 @@ import LoginPage from './presentation/pages/LoginPage';
 import AboutPage from './presentation/pages/AboutPage';
 import CheckoutPage from './presentation/pages/CheckoutPage';
 import CartSidebar from './presentation/components/cart/CartSidebar';
+import FloatingCartButton from './presentation/components/cart/FloatingCartButton';
 import { CartProvider } from './presentation/context/CartContext';
 import { FilterProvider } from './presentation/context/FilterContext';
 import { AuthProvider } from './presentation/context/AuthContext';
@@ -21,6 +22,7 @@ function App() {
             <div className="app">
               <Header />
               <CartSidebar />
+              <FloatingCartButton />
               <Routes>
                 <Route path="/" element={<HomePage />} />
                 <Route path="/profile" element={<UserPanelPage />} />
