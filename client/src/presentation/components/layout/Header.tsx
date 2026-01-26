@@ -27,6 +27,7 @@ export default function Header() {
           <div className="logo">
             <Link to="/" onClick={() => handleCategory('')}>
               <img src="/logo.png" alt="Comercial Torres" />
+              <span className="logo-text">Comercial Torres</span>
             </Link>
           </div>
 
