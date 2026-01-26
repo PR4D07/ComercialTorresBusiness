@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { jsPDF } from 'jspdf';
+import Swal from 'sweetalert2';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../hooks/useProducts';
 import { useAuth } from '../context/AuthContext';
@@ -29,8 +30,15 @@ export default function CheckoutPage() {
     if (!loading) {
       if (!user) {
         // If not logged in, redirect to login page with return url
-        alert('Debes iniciar sesión para finalizar tu compra.');
-        navigate('/login', { state: { from: '/checkout' } });
+        Swal.fire({
+          title: 'Inicia sesión',
+          text: 'Debes iniciar sesión para finalizar tu compra.',
+          icon: 'warning',
+          confirmButtonColor: '#E3000F',
+          confirmButtonText: 'Ir a Login'
+        }).then(() => {
+          navigate('/login', { state: { from: '/checkout' } });
+        });
       } else {
         // Auto-fill user data
         const names = user.displayName ? user.displayName.split(' ') : ['', ''];
@@ -124,8 +132,16 @@ export default function CheckoutPage() {
     e.preventDefault();
     // Simulate payment processing
     setTimeout(() => {
-      alert('¡Pago procesado con éxito! Tu boleta se descargará automáticamente.');
       generateReceipt();
+      Swal.fire({
+        title: '¡Pago Exitoso!',
+        text: 'Tu boleta se descargará automáticamente.',
+        icon: 'success',
+        confirmButtonColor: '#E3000F',
+        confirmButtonText: 'Aceptar'
+      }).then(() => {
+        navigate('/');
+      });
     }, 1500);
   };
 
