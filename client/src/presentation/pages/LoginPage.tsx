@@ -1,4 +1,4 @@
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { useEffect, useState } from 'react';
 import './LoginPage.css';
@@ -6,6 +6,7 @@ import './LoginPage.css';
 export default function LoginPage() {
   const { signInWithGoogle, loginWithEmail, registerWithEmail, resetPassword, updateUserPassword, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
   const [isRegistering, setIsRegistering] = useState(false);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,9 +18,10 @@ export default function LoginPage() {
 
   useEffect(() => {
     if (user && !showPasswordSetup && !isGoogleLoginProcessing) {
-      navigate('/profile');
+      const from = (location.state as any)?.from || '/profile';
+      navigate(from, { replace: true });
     }
-  }, [user, navigate, showPasswordSetup, isGoogleLoginProcessing]);
+  }, [user, navigate, showPasswordSetup, isGoogleLoginProcessing, location]);
 
   const getFriendlyErrorMessage = (errorCode: string) => {
     switch (errorCode) {
