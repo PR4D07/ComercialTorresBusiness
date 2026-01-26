@@ -1,12 +1,18 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { jsPDF } from 'jspdf';
 import { useCart } from '../context/CartContext';
 import { useProducts } from '../hooks/useProducts';
+import { useAuth } from '../context/AuthContext';
 import { ProductCard } from '../components/product/ProductCard';
 import './CheckoutPage.css';
 
 export default function CheckoutPage() {
+  const navigate = useNavigate();
   const { cart, total, addToCart } = useCart();
   const { products } = useProducts();
+  const { user, loading } = useAuth();
+  
   const [formData, setFormData] = useState({
     firstName: '',
     lastName: '',
@@ -18,6 +24,26 @@ export default function CheckoutPage() {
     cvv: ''
   });
 
+  // Verify authentication and auto-fill data
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        // If not logged in, redirect to login page with return url
+        alert('Debes iniciar sesión para finalizar tu compra.');
+        navigate('/login', { state: { from: '/checkout' } });
+      } else {
+        // Auto-fill user data
+        const names = user.displayName ? user.displayName.split(' ') : ['', ''];
+        setFormData(prev => ({
+          ...prev,
+          firstName: names[0] || '',
+          lastName: names.slice(1).join(' ') || '',
+          email: user.email || ''
+        }));
+      }
+    }
+  }, [user, loading, navigate]);
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
       ...formData,
@@ -25,10 +51,92 @@ export default function CheckoutPage() {
     });
   };
 
+  const generateReceipt = () => {
+    const doc = new jsPDF();
+    
+    // Header
+    doc.setFontSize(22);
+    doc.setTextColor(227, 0, 15); // Primary Red
+    doc.text('Comercial Torres', 105, 20, { align: 'center' });
+    
+    doc.setFontSize(16);
+    doc.setTextColor(0, 0, 0);
+    doc.text('Boleta de Venta Electrónica', 105, 30, { align: 'center' });
+    
+    doc.setFontSize(10);
+    doc.text(`Fecha: ${new Date().toLocaleString()}`, 105, 40, { align: 'center' });
+    doc.text(`ID Transacción: ${Math.random().toString(36).substr(2, 9).toUpperCase()}`, 105, 45, { align: 'center' });
+
+    // Customer Details
+    doc.line(20, 50, 190, 50);
+    doc.setFontSize(12);
+    doc.text('Datos del Cliente:', 20, 60);
+    doc.setFontSize(10);
+    doc.text(`Nombre: ${formData.firstName} ${formData.lastName}`, 20, 70);
+    doc.text(`Email: ${formData.email}`, 20, 75);
+    doc.text(`Dirección: ${formData.address}, ${formData.city}`, 20, 80);
+
+    // Order Items
+    doc.line(20, 85, 190, 85);
+    let yPos = 95;
+    
+    // Table Header
+    doc.setFont(undefined, 'bold');
+    doc.text('Producto', 20, yPos);
+    doc.text('Cant.', 140, yPos);
+    doc.text('Precio', 160, yPos);
+    doc.text('Total', 180, yPos);
+    doc.setFont(undefined, 'normal');
+    
+    yPos += 10;
+    
+    cart.forEach(item => {
+      const itemTotal = item.price * item.quantity;
+      // Truncate long names
+      const name = item.name.length > 40 ? item.name.substring(0, 37) + '...' : item.name;
+      
+      doc.text(name, 20, yPos);
+      doc.text(item.quantity.toString(), 145, yPos);
+      doc.text(`S/ ${item.price.toFixed(2)}`, 160, yPos);
+      doc.text(`S/ ${itemTotal.toFixed(2)}`, 180, yPos);
+      
+      yPos += 10;
+    });
+
+    // Total
+    doc.line(20, yPos, 190, yPos);
+    yPos += 10;
+    doc.setFontSize(14);
+    doc.setFont(undefined, 'bold');
+    doc.text(`TOTAL A PAGAR: S/ ${total.toFixed(2)}`, 190, yPos, { align: 'right' });
+
+    // Footer
+    yPos += 20;
+    doc.setFontSize(10);
+    doc.setFont(undefined, 'normal');
+    doc.text('¡Gracias por tu compra!', 105, yPos, { align: 'center' });
+    
+    // Save PDF
+    doc.save('Boleta-ComercialTorres.pdf');
+  };
+
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    alert('¡Pago procesado con éxito!');
+    // Simulate payment processing
+    setTimeout(() => {
+      alert('¡Pago procesado con éxito! Tu boleta se descargará automáticamente.');
+      generateReceipt();
+    }, 1500);
   };
+
+  if (loading) {
+    return <div className="loading-container">Cargando...</div>;
+  }
+
+  // If user is not logged in, we render nothing while redirecting (handled by useEffect)
+  if (!user) {
+    return null;
+  }
 
   // Filter products to show recommendations (exclude items already in cart)
   const recommendations = products
