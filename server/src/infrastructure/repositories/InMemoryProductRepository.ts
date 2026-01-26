@@ -10,7 +10,7 @@ export class InMemoryProductRepository implements ProductRepository {
             priceNew: 77.94,
             badge: { type: 'discount', text: '-40%' },
             category: 'HOMBRE',
-            imageUrl: 'https://tse4.mm.bing.net/th/id/OIP.pCPpMJaJQLbw5S1UzDMogwHaHa?rs=1&pid=ImgDetMain&o=7&rm=3'
+            imageUrl: '/products/ns-urban.jpg'
         },
         {
             id: 2,
@@ -19,7 +19,7 @@ export class InMemoryProductRepository implements ProductRepository {
             priceNew: 89.90,
             badge: { type: 'new', text: 'NUEVO' },
             category: 'MUJER',
-            imageUrl: 'https://tse1.mm.bing.net/th/id/OIP.XrH9881MEhRzD_jRhakg9AHaHa?rs=1&pid=ImgDetMain&o=7&rm=3'
+            imageUrl: '/products/bata-comfit.jpg'
         },
         {
             id: 3,
@@ -29,7 +29,7 @@ export class InMemoryProductRepository implements ProductRepository {
             priceNew: 79.92,
             badge: { type: 'discount', text: '-20%' },
             category: 'INFANTIL',
-            imageUrl: 'https://tse4.mm.bing.net/th/id/OIP.akawXAeSU_Hyr5Ikui7qgAHaHa?rs=1&pid=ImgDetMain&o=7&rm=3'
+            imageUrl: '/products/bg-school.jpg'
         },
         {
             id: 4,
@@ -37,7 +37,7 @@ export class InMemoryProductRepository implements ProductRepository {
             name: 'Zapatillas Deportivas Running',
             priceNew: 149.90,
             category: 'HOMBRE',
-            imageUrl: 'https://th.bing.com/th/id/R.8d1c54d1941bed624306b0a5bb322e58?rik=SWyBz2MkzywPiQ&pid=ImgRaw&r=0'
+            imageUrl: '/products/power-run.jpg'
         },
         {
             id: 5,
@@ -45,7 +45,7 @@ export class InMemoryProductRepository implements ProductRepository {
             name: 'Tacones Elegantes',
             priceNew: 199.90,
             category: 'MUJER',
-            imageUrl: 'https://tse4.mm.bing.net/th/id/OIP.u7Cj3yU4IGC6hp4us8p3WQHaLH?rs=1&pid=ImgDetMain&o=7&rm=3'
+            imageUrl: '/products/bata-heels.jpg'
         },
         {
             id: 6,
@@ -53,7 +53,7 @@ export class InMemoryProductRepository implements ProductRepository {
             name: 'Botas de Lluvia',
             priceNew: 59.90,
             category: 'INFANTIL',
-            imageUrl: 'https://c.pxhere.com/photos/6f/73/boots_rubber_galoshes_waders_footwear_wet_rainy_puddle-1150336.jpg!d'
+            imageUrl: '/products/bg-boots.jpg'
         },
         {
             id: 7,
@@ -61,7 +61,7 @@ export class InMemoryProductRepository implements ProductRepository {
             name: 'Zapatos punta de acero',
             priceNew: 249.90,
             category: 'HOMBRE',
-            imageUrl: 'https://tse3.mm.bing.net/th/id/OIP.4jH-xqPu1ORMpXVFsk0SFQHaHa?rs=1&pid=ImgDetMain&o=7&rm=3'
+            imageUrl: '/products/wb-steel.jpg'
         },
         {
             id: 8,
@@ -70,7 +70,7 @@ export class InMemoryProductRepository implements ProductRepository {
             priceNew: 289.90,
             badge: { type: 'new', text: 'NUEVO' },
             category: 'HOMBRE',
-            imageUrl: 'https://tse2.mm.bing.net/th/id/OIP.udFfOtjsSMjo8S9zKK5wXgHaHa?rs=1&pid=ImgDetMain&o=7&rm=3'
+            imageUrl: '/products/wb-boots.jpg'
         }
     ];
 
