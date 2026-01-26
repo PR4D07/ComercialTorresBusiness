@@ -10,7 +10,7 @@ import './CheckoutPage.css';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { cart, total, addToCart } = useCart();
+  const { cart, total, addToCart, clearCart } = useCart();
   const { products } = useProducts();
   const { user, loading } = useAuth();
   
@@ -133,6 +133,7 @@ export default function CheckoutPage() {
     // Simulate payment processing
     setTimeout(() => {
       generateReceipt();
+      clearCart(); // Clear the cart
       Swal.fire({
         title: '¡Pago Exitoso!',
         text: 'Tu boleta se descargará automáticamente.',
