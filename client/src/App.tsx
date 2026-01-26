@@ -5,6 +5,7 @@ import HomePage from './presentation/pages/HomePage';
 import UserPanelPage from './presentation/pages/UserPanelPage';
 import LoginPage from './presentation/pages/LoginPage';
 import AboutPage from './presentation/pages/AboutPage';
+import CheckoutPage from './presentation/pages/CheckoutPage';
 import CartSidebar from './presentation/components/cart/CartSidebar';
 import { CartProvider } from './presentation/context/CartContext';
 import { FilterProvider } from './presentation/context/FilterContext';
@@ -25,6 +26,7 @@ function App() {
                 <Route path="/profile" element={<UserPanelPage />} />
                 <Route path="/login" element={<LoginPage />} />
                 <Route path="/about" element={<AboutPage />} />
+                <Route path="/checkout" element={<CheckoutPage />} />
               </Routes>
               <Footer />
             </div>

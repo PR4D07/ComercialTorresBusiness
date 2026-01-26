@@ -1,8 +1,15 @@
+import { useNavigate } from 'react-router-dom';
 import { useCart } from '../../context/CartContext';
 import './CartSidebar.css';
 
 export default function CartSidebar() {
   const { cart, removeFromCart, toggleCart, isCartOpen, total } = useCart();
+  const navigate = useNavigate();
+
+  const handleCheckout = () => {
+    toggleCart();
+    navigate('/checkout');
+  };
 
   return (
     <>
@@ -19,6 +26,13 @@ export default function CartSidebar() {
           ) : (
             cart.map(item => (
               <div key={item.id} className="cart-item">
+                <div className="item-image">
+                  {item.imageUrl ? (
+                    <img src={item.imageUrl} alt={item.name} />
+                  ) : (
+                    <div className="placeholder"></div>
+                  )}
+                </div>
                 <div className="item-details">
                   <h4>{item.name}</h4>
                   <p>S/ {item.price.toFixed(2)} x {item.quantity}</p>
@@ -39,7 +53,7 @@ export default function CartSidebar() {
             <span>Total:</span>
             <span>S/ {total.toFixed(2)}</span>
           </div>
-          <button className="checkout-btn" onClick={() => alert('¡Gracias por tu compra!')}>
+          <button className="checkout-btn" onClick={handleCheckout}>
             FINALIZAR COMPRA
           </button>
         </div>

@@ -28,7 +28,8 @@ export default function ProductList() {
               onAddToCart={() => addToCart({
                 id: product.id,
                 name: product.name,
-                price: product.priceNew
+                price: product.priceNew,
+                imageUrl: product.imageUrl
               })}
             />
           ))}

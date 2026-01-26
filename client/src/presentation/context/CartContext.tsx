@@ -5,11 +5,12 @@ interface CartItem {
   name: string;
   price: number;
   quantity: number;
+  imageUrl?: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: { id: number; name: string; price: number }) => void;
+  addToCart: (product: { id: number; name: string; price: number; imageUrl?: string }) => void;
   removeFromCart: (id: number) => void;
   toggleCart: () => void;
   isCartOpen: boolean;
@@ -23,7 +24,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const [cart, setCart] = useState<CartItem[]>([]);
   const [isCartOpen, setIsCartOpen] = useState(false);
 
-  const addToCart = (product: { id: number; name: string; price: number }) => {
+  const addToCart = (product: { id: number; name: string; price: number; imageUrl?: string }) => {
     setCart(prev => {
       const existing = prev.find(item => item.id === product.id);
       if (existing) {
