@@ -81,12 +81,12 @@ export default function CheckoutPage() {
     let yPos = 95;
     
     // Table Header
-    doc.setFont(undefined, 'bold');
+    doc.setFont('helvetica', 'bold');
     doc.text('Producto', 20, yPos);
     doc.text('Cant.', 140, yPos);
     doc.text('Precio', 160, yPos);
     doc.text('Total', 180, yPos);
-    doc.setFont(undefined, 'normal');
+    doc.setFont('helvetica', 'normal');
     
     yPos += 10;
     
@@ -107,13 +107,13 @@ export default function CheckoutPage() {
     doc.line(20, yPos, 190, yPos);
     yPos += 10;
     doc.setFontSize(14);
-    doc.setFont(undefined, 'bold');
+    doc.setFont('helvetica', 'bold');
     doc.text(`TOTAL A PAGAR: S/ ${total.toFixed(2)}`, 190, yPos, { align: 'right' });
 
     // Footer
     yPos += 20;
     doc.setFontSize(10);
-    doc.setFont(undefined, 'normal');
+    doc.setFont('helvetica', 'normal');
     doc.text('¡Gracias por tu compra!', 105, yPos, { align: 'center' });
     
     // Save PDF
