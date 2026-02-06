@@ -1,3 +1,12 @@
+import dotenv from 'dotenv';
+import path from 'path';
+
+// Try loading from default location first, then explicit path
+const result = dotenv.config();
+if (result.error) {
+    dotenv.config({ path: path.join(process.cwd(), '.env') });
+}
+
 import express from 'express';
 import cors from 'cors';
 import productRoutes from './infrastructure/http/routes/productRoutes';
