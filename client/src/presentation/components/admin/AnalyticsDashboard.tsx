@@ -10,7 +10,7 @@ interface KPIs {
     endDate: string;
 }
 
-export const AnalyticsDashboard = () => {
+export default function AnalyticsDashboard() {
     const [kpis, setKpis] = useState<KPIs | null>(null);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);

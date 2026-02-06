@@ -1,7 +1,14 @@
 import React from 'react';
 import './AboutPage.css';
+import { trackEvent } from '../utils/analytics';
 
 const AboutPage: React.FC = () => {
+  const handleWhatsAppClick = () => {
+    trackEvent('whatsapp_click', {
+      source: 'about_page'
+    });
+  };
+
   return (
     <div className="about-page">
       <div className="about-header">
