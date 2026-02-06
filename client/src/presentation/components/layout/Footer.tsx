@@ -1,7 +1,15 @@
 import './Footer.css';
 import { Link } from 'react-router-dom';
+import { trackEvent } from '../../utils/analytics';
 
 export default function Footer() {
+  const handleWhatsAppClick = () => {
+    trackEvent('whatsapp_click', {
+      location: 'footer',
+      link_url: 'https://wa.me/'
+    });
+  };
+
   return (
     <footer className="site-footer">
       <div className="container footer-content">
@@ -12,7 +20,7 @@ export default function Footer() {
             <a href="https://www.facebook.com/profile.php?id=61586891979849" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
             <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-tiktok"></i></a>
             <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer"><i className="fab fa-whatsapp"></i></a>
+            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" onClick={handleWhatsAppClick}><i className="fab fa-whatsapp"></i></a>
           </div>
         </div>
 

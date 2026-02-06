@@ -1,6 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import productRoutes from './infrastructure/http/routes/productRoutes';
+import analyticsRoutes from './infrastructure/http/routes/analyticsRoutes';
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -19,6 +20,7 @@ app.get('/', (req, res) => {
 
 // Routes
 app.use('/api', productRoutes);
+app.use('/api/analytics', analyticsRoutes);
 
 app.listen(PORT, () => {
     console.log(`Server running on http://localhost:${PORT}`);

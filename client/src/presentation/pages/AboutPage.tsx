@@ -82,7 +82,7 @@ const AboutPage: React.FC = () => {
           <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="social-btn btn-instagram">
             <i className="fab fa-instagram"></i> Instagram
           </a>
-          <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="social-btn btn-whatsapp">
+          <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="social-btn btn-whatsapp" onClick={handleWhatsAppClick}>
             <i className="fab fa-whatsapp"></i> WhatsApp
           </a>
         </div>

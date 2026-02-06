@@ -21,13 +21,22 @@ interface AuthContextType {
   resetPassword: (email: string) => Promise<void>;
   updateUserPassword: (password: string) => Promise<void>;
   logout: () => Promise<void>;
+  isAdmin: boolean;
 }
+
+// TODO: En el futuro, mover esto a una base de datos o Custom Claims de Firebase
+const ADMIN_EMAILS = [
+  'admin@comercialtorres.com', 
+  'cpradot22_2@unc.edu.pe', // Tu correo
+  'analytics-viewer@comercialtorres2.iam.gserviceaccount.com'
+];
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
     if (!auth) {
@@ -37,6 +46,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
       setUser(currentUser);
+      if (currentUser && currentUser.email) {
+        setIsAdmin(ADMIN_EMAILS.includes(currentUser.email));
+      } else {
+        setIsAdmin(false);
+      }
       setLoading(false);
     });
     return () => unsubscribe();
@@ -104,7 +118,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, signInWithGoogle, loginWithEmail, registerWithEmail, resetPassword, updateUserPassword, logout }}>
+    <AuthContext.Provider value={{ user, loading, isAdmin, signInWithGoogle, loginWithEmail, registerWithEmail, resetPassword, updateUserPassword, logout }}>
       {children}
     </AuthContext.Provider>
   );

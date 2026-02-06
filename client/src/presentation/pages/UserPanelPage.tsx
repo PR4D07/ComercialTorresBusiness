@@ -4,7 +4,7 @@ import { useAuth } from '../context/AuthContext';
 import './UserPanel.css';
 
 export default function UserPanelPage() {
-  const { user, loading, logout } = useAuth();
+  const { user, loading, logout, isAdmin } = useAuth();
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
 
@@ -30,6 +30,8 @@ export default function UserPanelPage() {
         return <UserOrders />;
       case 'addresses':
         return <UserAddresses />;
+      case 'admin':
+        return isAdmin ? <AnalyticsDashboard /> : <div>Acceso denegado</div>;
       default:
         return <UserProfile user={user} />;
     }
@@ -46,6 +48,7 @@ export default function UserPanelPage() {
           )}
           <h3>{user.displayName}</h3>
           <p>{user.email}</p>
+          {isAdmin && <span className="badge-admin">Administrador</span>}
         </div>
         <nav className="user-nav">
           <button 
@@ -54,6 +57,16 @@ export default function UserPanelPage() {
           >
             <i className="far fa-user"></i> Mi Perfil
           </button>
+          
+          {isAdmin && (
+            <button 
+                className={activeTab === 'admin' ? 'active' : ''} 
+                onClick={() => setActiveTab('admin')}
+            >
+                <i className="fas fa-chart-line"></i> Métricas
+            </button>
+          )}
+
           <button 
             className={activeTab === 'orders' ? 'active' : ''} 
             onClick={() => setActiveTab('orders')}
