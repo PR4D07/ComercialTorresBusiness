@@ -1,5 +1,6 @@
 import { Router } from 'express';
 import { BetaAnalyticsDataClient } from '@google-analytics/data';
+import { supabase } from '../../config/supabase';
 
 const router = Router();
 
@@ -25,6 +26,25 @@ const getAnalyticsClient = () => {
   }
 
   return analyticsClient;
+};
+
+const resolveStartDateForSupabase = (start: string) => {
+  if (start === 'today') {
+    const today = new Date();
+    today.setUTCHours(0, 0, 0, 0);
+    return today.toISOString();
+  }
+
+  const match = /^(\d+)daysAgo$/.exec(start);
+  if (!match) return null;
+
+  const days = Number(match[1]);
+  if (!Number.isFinite(days)) return null;
+
+  const date = new Date();
+  date.setUTCDate(date.getUTCDate() - days);
+  date.setUTCHours(0, 0, 0, 0);
+  return date.toISOString();
 };
 
 router.get('/kpis', async (req, res) => {
@@ -68,31 +88,28 @@ router.get('/kpis', async (req, res) => {
       averageSessionDurationSeconds = Number(avgDurationMetric?.value ?? 0);
     }
 
-    const [whatsappResponse] = await client.runReport({
-      property: `properties/${propertyId}`,
-      dateRanges: [
-        {
-          startDate: String(startDate),
-          endDate: String(endDate)
-        }
-      ],
-      metrics: [{ name: 'eventCount' }],
-      dimensions: [{ name: 'eventName' }],
-      dimensionFilter: {
-        filter: {
-          fieldName: 'eventName',
-          stringFilter: {
-            matchType: 'EXACT',
-            value: 'whatsapp_click'
-          }
-        }
-      }
-    });
-
     let whatsappClicks = 0;
 
-    if (whatsappResponse.rows && whatsappResponse.rows[0]?.metricValues) {
-      whatsappClicks = Number(whatsappResponse.rows[0].metricValues[0]?.value ?? 0);
+    try {
+      const supabaseStartDate = resolveStartDateForSupabase(String(startDate));
+      let query = supabase
+        .from('events')
+        .select('id', { count: 'exact', head: true })
+        .eq('event_type', 'whatsapp_click');
+
+      if (supabaseStartDate) {
+        query = query.gte('timestamp', supabaseStartDate);
+      }
+
+      const { count, error } = await query;
+
+      if (error) {
+        console.error('Error counting whatsapp_click events from Supabase:', error);
+      } else if (typeof count === 'number') {
+        whatsappClicks = count;
+      }
+    } catch (err) {
+      console.error('Unexpected error counting whatsapp_click events:', err);
     }
 
     const averageSessionDurationMinutes = averageSessionDurationSeconds / 60;
@@ -119,4 +136,3 @@ router.get('/kpis', async (req, res) => {
 });
 
 export default router;
-
