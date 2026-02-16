@@ -1,9 +1,19 @@
 import { Router } from 'express';
-import { AnalyticsController } from '../controllers/AnalyticsController';
 
 const router = Router();
-const analyticsController = new AnalyticsController();
 
-router.get('/kpis', analyticsController.getKPIs);
+router.get('/kpis', (req, res) => {
+  const { startDate = '30daysAgo', endDate = 'today' } = req.query;
+
+  res.json({
+    sessions: 0,
+    whatsappClicks: 0,
+    averageSessionDurationMinutes: 0,
+    averageSessionDurationSeconds: 0,
+    startDate: String(startDate),
+    endDate: String(endDate)
+  });
+});
 
 export default router;
+

@@ -4,7 +4,7 @@ import './ProductCard.css';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: (product: Product) => void;
+  onAddToCart: () => void;
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
@@ -46,10 +46,10 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           className="btn-add"
           onClick={(e) => {
             e.stopPropagation();
-            handleOpenDetail();
+            onAddToCart();
           }}
         >
-          VER DETALLES
+          AGREGAR AL CARRITO
         </button>
       </div>
     </article>

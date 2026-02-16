@@ -1,9 +1,14 @@
-import { Product, ProductRepository, ProductCriteria } from "../domain/Product";
+import type { Product, ProductCriteria, ProductRepository } from '../domain/Product';
 
 export class ListProducts {
-    constructor(private readonly repository: ProductRepository) {}
+  private repository: ProductRepository;
 
-    async execute(criteria?: ProductCriteria): Promise<Product[]> {
-        return this.repository.findAll(criteria);
-    }
+  constructor(repository: ProductRepository) {
+    this.repository = repository;
+  }
+
+  async execute(criteria?: ProductCriteria): Promise<Product[]> {
+    return this.repository.findAll(criteria);
+  }
 }
+

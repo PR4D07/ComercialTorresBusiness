@@ -41,10 +41,13 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const syncUserWithDb = async (authUser: User) => {
     if (!authUser.email) return;
+    if (!supabase) {
+      console.warn('Supabase client no inicializado. Revisa VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en el cliente.');
+      return;
+    }
 
     try {
-      // 1. Verificar/Crear Usuario en tabla 'users'
-      const { data: existingUser, error: userError } = await supabase
+      const { data: existingUser } = await supabase
         .from('users')
         .select('id')
         .eq('id', authUser.uid)
@@ -70,8 +73,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // 2. Verificar/Crear Cliente en tabla 'customers'
-      const { data: existingCustomer, error: customerError } = await supabase
+      const { data: existingCustomer } = await supabase
         .from('customers')
         .select('id')
         .eq('user_id', authUser.uid)
