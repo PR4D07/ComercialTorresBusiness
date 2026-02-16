@@ -21,7 +21,7 @@ router.post('/sync', async (req, res) => {
 
     if (userSelectError) {
       console.error('Error checking existing user in Supabase:', userSelectError);
-      return res.status(500).json({ error: 'Failed to check user in database' });
+      return res.status(500).json({ error: 'Failed to check user in database', details: userSelectError });
     }
 
     if (!existingUser) {
@@ -35,7 +35,7 @@ router.post('/sync', async (req, res) => {
 
       if (insertUserError) {
         console.error('Error inserting user in Supabase:', insertUserError);
-        return res.status(500).json({ error: 'Failed to create user in database' });
+        return res.status(500).json({ error: 'Failed to create user in database', details: insertUserError });
       }
     }
 
@@ -47,7 +47,7 @@ router.post('/sync', async (req, res) => {
 
     if (customerSelectError) {
       console.error('Error checking existing customer in Supabase:', customerSelectError);
-      return res.status(500).json({ error: 'Failed to check customer in database' });
+      return res.status(500).json({ error: 'Failed to check customer in database', details: customerSelectError });
     }
 
     if (!existingCustomer) {
@@ -61,7 +61,7 @@ router.post('/sync', async (req, res) => {
 
       if (insertCustomerError) {
         console.error('Error inserting customer in Supabase:', insertCustomerError);
-        return res.status(500).json({ error: 'Failed to create customer in database' });
+        return res.status(500).json({ error: 'Failed to create customer in database', details: insertCustomerError });
       }
     }
 
@@ -73,4 +73,3 @@ router.post('/sync', async (req, res) => {
 });
 
 export default router;
-
