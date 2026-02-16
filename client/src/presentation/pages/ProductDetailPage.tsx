@@ -28,6 +28,9 @@ export default function ProductDetailPage() {
         if (apiUrl.endsWith('/')) {
           apiUrl = apiUrl.slice(0, -1);
         }
+        if (!apiUrl.endsWith('/api') && !apiUrl.includes('localhost')) {
+          apiUrl += '/api';
+        }
         const res = await fetch(`${apiUrl}/products/${id}`);
         if (!res.ok) {
           throw new Error('No se pudo cargar el producto');
