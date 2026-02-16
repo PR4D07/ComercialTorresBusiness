@@ -11,7 +11,6 @@ import {
   type User
 } from 'firebase/auth';
 import { auth, googleProvider } from '../../infrastructure/config/firebase';
-import { supabase } from '../../infrastructure/config/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -41,61 +40,36 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   const syncUserWithDb = async (authUser: User) => {
     if (!authUser.email) return;
-    if (!supabase) {
-      console.warn('Supabase client no inicializado. Revisa VITE_SUPABASE_URL y VITE_SUPABASE_ANON_KEY en el cliente.');
-      return;
-    }
+
+    const name =
+      authUser.displayName ||
+      authUser.email?.split('@')[0] ||
+      'Usuario';
 
     try {
-      const { data: existingUser } = await supabase
-        .from('users')
-        .select('id')
-        .eq('id', authUser.uid)
-        .maybeSingle(); // Use maybeSingle to avoid error if not found
-
-      if (!existingUser) {
-        console.log("Usuario nuevo detectado, registrando en Supabase...", authUser.uid);
-
-        const { error: insertError } = await supabase
-          .from('users')
-          .insert({
-            id: authUser.uid,
-            email: authUser.email,
-            name: authUser.displayName || authUser.email?.split('@')[0] || 'Usuario'
-          });
-          
-        if (insertError) {
-            console.error('Error creating user in DB (Detalles):', JSON.stringify(insertError, null, 2));
-            // Si falla users, no intentamos customers para evitar inconsistencias
-            return; 
-        } else {
-            console.log("Usuario registrado exitosamente en Supabase");
-        }
+      let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      if (apiUrl.endsWith('/')) {
+        apiUrl = apiUrl.slice(0, -1);
+      }
+      if (!apiUrl.endsWith('/api') && !apiUrl.includes('localhost')) {
+        apiUrl += '/api';
       }
 
-      const { data: existingCustomer } = await supabase
-        .from('customers')
-        .select('id')
-        .eq('user_id', authUser.uid)
-        .maybeSingle();
+      const response = await fetch(`${apiUrl}/users/sync`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          id: authUser.uid,
+          email: authUser.email,
+          name
+        })
+      });
 
-      if (!existingCustomer) {
-        console.log("Cliente nuevo detectado, registrando perfil...", authUser.uid);
-        const { error: insertCustomerError } = await supabase
-          .from('customers')
-          .insert({
-            user_id: authUser.uid,
-            email: authUser.email,
-            name: authUser.displayName || authUser.email?.split('@')[0] || 'Usuario'
-          });
-
-        if (insertCustomerError) {
-            console.error('Error creating customer in DB:', insertCustomerError);
-        } else {
-            console.log("Perfil de cliente creado exitosamente");
-        }
+      if (!response.ok) {
+        console.error('Error syncing user with backend:', await response.text());
       }
-
     } catch (err) {
       console.error('Error crítico en syncUserWithDb:', err);
     }
