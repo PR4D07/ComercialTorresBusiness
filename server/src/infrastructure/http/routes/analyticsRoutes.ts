@@ -1,45 +1,100 @@
 import { Router } from 'express';
-import { supabase } from '../../config/supabase';
+import { BetaAnalyticsDataClient } from '@google-analytics/data';
 
 const router = Router();
+
+const propertyId = process.env.GA4_PROPERTY_ID;
+
+let analyticsClient: BetaAnalyticsDataClient | null = null;
+
+const getAnalyticsClient = () => {
+  if (analyticsClient) return analyticsClient;
+
+  const rawCredentials = process.env.GA4_SERVICE_ACCOUNT_KEY;
+
+  if (rawCredentials) {
+    try {
+      const credentials = JSON.parse(rawCredentials);
+      analyticsClient = new BetaAnalyticsDataClient({ credentials });
+    } catch (err) {
+      console.error('Error parsing GA4_SERVICE_ACCOUNT_KEY JSON:', err);
+      analyticsClient = new BetaAnalyticsDataClient();
+    }
+  } else {
+    analyticsClient = new BetaAnalyticsDataClient();
+  }
+
+  return analyticsClient;
+};
 
 router.get('/kpis', async (req, res) => {
   const { startDate = '30daysAgo', endDate = 'today' } = req.query;
 
+  if (!propertyId) {
+    console.warn('GA4_PROPERTY_ID is not set. Returning zero KPIs.');
+    return res.json({
+      sessions: 0,
+      whatsappClicks: 0,
+      averageSessionDurationMinutes: 0,
+      averageSessionDurationSeconds: 0,
+      startDate: String(startDate),
+      endDate: String(endDate)
+    });
+  }
+
   try {
-    const { data, error } = await supabase
-      .from('events')
-      .select('event_type, metadata');
+    const client = getAnalyticsClient();
 
-    if (error) {
-      console.error('Error fetching events for analytics:', error);
-      return res.json({
-        sessions: 0,
-        whatsappClicks: 0,
-        averageSessionDurationMinutes: 0,
-        averageSessionDurationSeconds: 0,
-        startDate: String(startDate),
-        endDate: String(endDate)
-      });
+    const [sessionsResponse] = await client.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [
+        {
+          startDate: String(startDate),
+          endDate: String(endDate)
+        }
+      ],
+      metrics: [
+        { name: 'sessions' },
+        { name: 'averageSessionDuration' }
+      ]
+    });
+
+    let sessions = 0;
+    let averageSessionDurationSeconds = 0;
+
+    if (sessionsResponse.rows && sessionsResponse.rows[0]?.metricValues) {
+      const [sessionsMetric, avgDurationMetric] = sessionsResponse.rows[0].metricValues;
+      sessions = Number(sessionsMetric?.value ?? 0);
+      averageSessionDurationSeconds = Number(avgDurationMetric?.value ?? 0);
     }
 
-    const events = data ?? [];
-
-    const sessions = events.length;
-    const whatsappClicks = events.filter((event: any) => event.event_type === 'whatsapp_click').length;
-
-    let totalSeconds = 0;
-    let durationEvents = 0;
-
-    for (const event of events as any[]) {
-      const seconds = event.metadata?.sessionDurationSeconds ?? event.metadata?.durationSeconds;
-      if (typeof seconds === 'number' && Number.isFinite(seconds) && seconds > 0) {
-        totalSeconds += seconds;
-        durationEvents += 1;
+    const [whatsappResponse] = await client.runReport({
+      property: `properties/${propertyId}`,
+      dateRanges: [
+        {
+          startDate: String(startDate),
+          endDate: String(endDate)
+        }
+      ],
+      metrics: [{ name: 'eventCount' }],
+      dimensions: [{ name: 'eventName' }],
+      dimensionFilter: {
+        filter: {
+          fieldName: 'eventName',
+          stringFilter: {
+            matchType: 'EXACT',
+            value: 'whatsapp_click'
+          }
+        }
       }
+    });
+
+    let whatsappClicks = 0;
+
+    if (whatsappResponse.rows && whatsappResponse.rows[0]?.metricValues) {
+      whatsappClicks = Number(whatsappResponse.rows[0].metricValues[0]?.value ?? 0);
     }
 
-    const averageSessionDurationSeconds = durationEvents ? totalSeconds / durationEvents : 0;
     const averageSessionDurationMinutes = averageSessionDurationSeconds / 60;
 
     return res.json({
@@ -51,7 +106,7 @@ router.get('/kpis', async (req, res) => {
       endDate: String(endDate)
     });
   } catch (err) {
-    console.error('Unexpected error building analytics KPIs:', err);
+    console.error('Error fetching KPIs from Google Analytics:', err);
     return res.json({
       sessions: 0,
       whatsappClicks: 0,
