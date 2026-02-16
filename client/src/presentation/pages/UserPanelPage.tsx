@@ -9,6 +9,8 @@ export default function UserPanelPage() {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState('profile');
 
+  const [imageError, setImageError] = useState(false);
+
   useEffect(() => {
     if (!loading && !user) {
       navigate('/login');
@@ -42,8 +44,14 @@ export default function UserPanelPage() {
     <div className="container user-panel-page">
       <aside className="user-sidebar">
         <div className="user-info-summary">
-          {user.photoURL ? (
-            <img src={user.photoURL} alt={user.displayName || 'User'} className="avatar-img" />
+          {user.photoURL && !imageError ? (
+            <img 
+              src={user.photoURL} 
+              alt={user.displayName || 'User'} 
+              className="avatar-img" 
+              referrerPolicy="no-referrer"
+              onError={() => setImageError(true)}
+            />
           ) : (
             <div className="avatar-placeholder">{user.displayName?.charAt(0)}</div>
           )}
@@ -116,31 +124,16 @@ function UserProfile({ user }: { user: any }) {
 }
 
 function UserOrders() {
-  const orders = [
-    { id: 'ORD-001', date: '2025-01-20', total: 159.90, status: 'Entregado' },
-    { id: 'ORD-002', date: '2025-01-10', total: 89.90, status: 'En camino' },
-  ];
-
   return (
     <div className="panel-section">
-      <h2>Mis Pedidos</h2>
-      <div className="orders-list">
-        {orders.map(order => (
-          <div key={order.id} className="order-card">
-            <div className="order-header">
-              <span className="order-id">#{order.id}</span>
-              <span className={`order-status ${order.status.toLowerCase().replace(' ', '-')}`}>
-                {order.status}
-              </span>
-            </div>
-            <div className="order-details">
-              <p>Fecha: {order.date}</p>
-              <p>Total: <strong>S/ {order.total.toFixed(2)}</strong></p>
-            </div>
-            <button className="btn-view-order">Ver Detalles</button>
-          </div>
-        ))}
-      </div>
+      <h2>Pedidos (Próximamente)</h2>
+      <p>
+        Por ahora no realizamos delivery ni gestionamos pedidos en línea desde la web.
+      </p>
+      <p>
+        Puedes visitarnos en tienda física para realizar tus compras. 
+        Esta sección se habilitará más adelante cuando activemos los pedidos en línea.
+      </p>
     </div>
   );
 }

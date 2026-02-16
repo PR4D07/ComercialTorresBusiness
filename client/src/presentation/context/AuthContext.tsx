@@ -11,6 +11,7 @@ import {
   type User
 } from 'firebase/auth';
 import { auth, googleProvider } from '../../infrastructure/config/firebase';
+import { supabase } from '../../infrastructure/config/supabase';
 
 interface AuthContextType {
   user: User | null;
@@ -38,16 +39,78 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const [loading, setLoading] = useState(true);
   const [isAdmin, setIsAdmin] = useState(false);
 
+  const syncUserWithDb = async (authUser: User) => {
+    if (!authUser.email) return;
+
+    try {
+      // 1. Verificar/Crear Usuario en tabla 'users'
+      const { data: existingUser, error: userError } = await supabase
+        .from('users')
+        .select('id')
+        .eq('id', authUser.uid)
+        .maybeSingle(); // Use maybeSingle to avoid error if not found
+
+      if (!existingUser) {
+        console.log("Usuario nuevo detectado, registrando en Supabase...", authUser.uid);
+
+        const { error: insertError } = await supabase
+          .from('users')
+          .insert({
+            id: authUser.uid,
+            email: authUser.email,
+            name: authUser.displayName || authUser.email?.split('@')[0] || 'Usuario'
+          });
+          
+        if (insertError) {
+            console.error('Error creating user in DB (Detalles):', JSON.stringify(insertError, null, 2));
+            // Si falla users, no intentamos customers para evitar inconsistencias
+            return; 
+        } else {
+            console.log("Usuario registrado exitosamente en Supabase");
+        }
+      }
+
+      // 2. Verificar/Crear Cliente en tabla 'customers'
+      const { data: existingCustomer, error: customerError } = await supabase
+        .from('customers')
+        .select('id')
+        .eq('user_id', authUser.uid)
+        .maybeSingle();
+
+      if (!existingCustomer) {
+        console.log("Cliente nuevo detectado, registrando perfil...", authUser.uid);
+        const { error: insertCustomerError } = await supabase
+          .from('customers')
+          .insert({
+            user_id: authUser.uid,
+            email: authUser.email,
+            name: authUser.displayName || authUser.email?.split('@')[0] || 'Usuario'
+          });
+
+        if (insertCustomerError) {
+            console.error('Error creating customer in DB:', insertCustomerError);
+        } else {
+            console.log("Perfil de cliente creado exitosamente");
+        }
+      }
+
+    } catch (err) {
+      console.error('Error crítico en syncUserWithDb:', err);
+    }
+  };
+
   useEffect(() => {
     if (!auth) {
       console.error("Auth no inicializado. Revisa la configuración de Firebase.");
       setLoading(false);
       return;
     }
-    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+    const unsubscribe = onAuthStateChanged(auth, async (currentUser) => {
       setUser(currentUser);
       if (currentUser && currentUser.email) {
         setIsAdmin(ADMIN_EMAILS.includes(currentUser.email));
+        // Sincronizar con Supabase
+        await syncUserWithDb(currentUser);
       } else {
         setIsAdmin(false);
       }
@@ -99,9 +162,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const updateUserPassword = async (password: string) => {
-    if (!auth || !auth.currentUser) throw new Error("No hay usuario autenticado");
+    if (!auth) throw new Error("Firebase Auth no está inicializado");
     try {
-      await updatePassword(auth.currentUser, password);
+      await updatePassword(auth.currentUser!, password);
     } catch (error) {
       console.error("Error al actualizar contraseña:", error);
       throw error;
@@ -109,7 +172,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const logout = async () => {
-    if (!auth) return;
+    if (!auth) throw new Error("Firebase Auth no está inicializado");
     try {
       await signOut(auth);
     } catch (error) {
@@ -118,14 +181,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ user, loading, isAdmin, signInWithGoogle, loginWithEmail, registerWithEmail, resetPassword, updateUserPassword, logout }}>
+    <AuthContext.Provider value={{
+      user,
+      loading,
+      signInWithGoogle,
+      loginWithEmail,
+      registerWithEmail,
+      resetPassword,
+      updateUserPassword,
+      logout,
+      isAdmin
+    }}>
       {children}
     </AuthContext.Provider>
   );
 }
 
-export function useAuth() {
+export const useAuth = () => {
   const context = useContext(AuthContext);
-  if (!context) throw new Error('useAuth must be used within an AuthProvider');
+  if (context === undefined) {
+    throw new Error('useAuth must be used within an AuthProvider');
+  }
   return context;
-}
+};

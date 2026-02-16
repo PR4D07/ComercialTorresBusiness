@@ -1,11 +1,36 @@
 import React from 'react';
 import './AboutPage.css';
 import { trackEvent } from '../utils/analytics';
+import { useAuth } from '../context/AuthContext';
 
 const AboutPage: React.FC = () => {
+  const { user } = useAuth();
+
+  const getShortName = () => {
+    const displayName = user?.displayName?.trim();
+    if (!displayName) return '';
+    const parts = displayName.split(/\s+/);
+    if (parts.length === 0) return '';
+    const first = parts[0];
+    const last = parts.length > 1 ? parts[1] : '';
+    return last ? `${first} ${last}` : first;
+  };
+
+  const buildWhatsAppUrl = () => {
+    const phone = '51910025590';
+    const shortName = getShortName();
+    const baseText = shortName
+      ? `Buenos días, mi nombre es ${shortName}. Quisiera información sobre productos y precios.`
+      : 'Buenos días, quisiera información sobre productos y precios.';
+    const encoded = encodeURIComponent(baseText);
+    return `https://wa.me/${phone}?text=${encoded}`;
+  };
+
   const handleWhatsAppClick = () => {
+    const url = buildWhatsAppUrl();
     trackEvent('whatsapp_click', {
-      source: 'about_page'
+      source: 'about_page',
+      link_url: url
     });
   };
 
@@ -77,6 +102,15 @@ const AboutPage: React.FC = () => {
         <div className="location-details">
           <p><strong>Dirección:</strong> Jr. San Martin # 405, Bambamarca, Hualgayoc, Cajamarca.</p>
           <p><em>(A una cuadra del mercado y dos cuadras de la plaza de armas)</em></p>
+          <p>
+            <a
+              href="https://maps.app.goo.gl/hvMhUkFXnqtEdS196"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Ver en Google Maps
+            </a>
+          </p>
         </div>
 
         <div className="social-buttons">
@@ -89,7 +123,13 @@ const AboutPage: React.FC = () => {
           <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer" className="social-btn btn-instagram">
             <i className="fab fa-instagram"></i> Instagram
           </a>
-          <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" className="social-btn btn-whatsapp" onClick={handleWhatsAppClick}>
+          <a
+            href={buildWhatsAppUrl()}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="social-btn btn-whatsapp"
+            onClick={handleWhatsAppClick}
+          >
             <i className="fab fa-whatsapp"></i> WhatsApp
           </a>
         </div>

@@ -2,6 +2,19 @@ import { StrictMode, useState, useEffect, Component, type ReactNode } from 'reac
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
+const gaId = import.meta.env.VITE_GA_MEASUREMENT_ID
+const isProd = import.meta.env.MODE === 'production'
+if (isProd && gaId) {
+  const script = document.createElement('script')
+  script.async = true
+  script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`
+  document.head.appendChild(script)
+  ;(window as any).dataLayer = (window as any).dataLayer || []
+  ;(window as any).gtag = function () { (window as any).dataLayer.push(arguments) }
+  ;(window as any).gtag('js', new Date())
+  ;(window as any).gtag('config', gaId)
+}
+
 // ErrorBoundary para capturar errores de renderizado
 class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean, error: any }> {
   constructor(props: { children: ReactNode }) {

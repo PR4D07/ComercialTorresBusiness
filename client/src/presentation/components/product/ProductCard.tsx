@@ -1,4 +1,5 @@
 import type { Product } from '../../../domain/models/Product';
+import { useNavigate } from 'react-router-dom';
 import './ProductCard.css';
 
 interface ProductCardProps {
@@ -7,8 +8,14 @@ interface ProductCardProps {
 }
 
 export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+  const navigate = useNavigate();
+
+  const handleOpenDetail = () => {
+    navigate(`/product/${product.id}`);
+  };
+
   return (
-    <article className="product-card">
+    <article className="product-card" onClick={handleOpenDetail}>
       {product.badge && (
         <div className={`badge ${product.badge.type}`}>
           {product.badge.text}
@@ -16,7 +23,12 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
       )}
       <div className="product-image">
         {product.imageUrl ? (
-          <img src={product.imageUrl} alt={product.name} className="img-fluid" style={{ width: '100%', height: '100%', objectFit: 'contain' }} />
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="img-fluid"
+            style={{ width: '100%', height: '100%', objectFit: 'contain' }}
+          />
         ) : (
           <div className="img-placeholder"></div>
         )}
@@ -30,11 +42,14 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           )}
           <span className="price-new">S/ {product.priceNew.toFixed(2)}</span>
         </div>
-        <button 
+        <button
           className="btn-add"
-          onClick={() => onAddToCart(product)}
+          onClick={(e) => {
+            e.stopPropagation();
+            handleOpenDetail();
+          }}
         >
-          AGREGAR AL CARRITO
+          VER DETALLES
         </button>
       </div>
     </article>

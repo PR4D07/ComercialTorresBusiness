@@ -4,6 +4,7 @@ export interface Product {
   brand: string;
   priceOld?: number;
   priceNew: number;
+  category?: string;
   badge?: {
     type: 'discount' | 'new';
     text: string;

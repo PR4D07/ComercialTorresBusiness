@@ -20,7 +20,7 @@ export default function Header() {
   return (
     <>
       <div className="top-bar">
-        <p>¡ENVÍO GRATIS POR COMPRAS MAYORES A S/ 199!</p>
+        <p>¡DESCUENTOS EXCLUSIVOS POR COMPRAS MAYORES A S/ 199!</p>
       </div>
       <header className="main-header">
         <div className="container header-content">

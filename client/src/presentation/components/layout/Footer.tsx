@@ -1,12 +1,36 @@
 import './Footer.css';
 import { Link } from 'react-router-dom';
 import { trackEvent } from '../../utils/analytics';
+import { useAuth } from '../../context/AuthContext';
 
 export default function Footer() {
+  const { user } = useAuth();
+
+  const getShortName = () => {
+    const displayName = user?.displayName?.trim();
+    if (!displayName) return '';
+    const parts = displayName.split(/\s+/);
+    if (parts.length === 0) return '';
+    const first = parts[0];
+    const last = parts.length > 1 ? parts[1] : '';
+    return last ? `${first} ${last}` : first;
+  };
+
+  const buildWhatsAppUrl = () => {
+    const phone = '51910025590';
+    const shortName = getShortName();
+    const baseText = shortName
+      ? `Buenos días, mi nombre es ${shortName}. Quisiera información sobre productos y precios.`
+      : 'Buenos días, quisiera información sobre productos y precios.';
+    const encoded = encodeURIComponent(baseText);
+    return `https://wa.me/${phone}?text=${encoded}`;
+  };
+
   const handleWhatsAppClick = () => {
+    const url = buildWhatsAppUrl();
     trackEvent('whatsapp_click', {
       location: 'footer',
-      link_url: 'https://wa.me/'
+      link_url: url
     });
   };
 
@@ -20,7 +44,14 @@ export default function Footer() {
             <a href="https://www.facebook.com/profile.php?id=61586891979849" target="_blank" rel="noopener noreferrer"><i className="fab fa-facebook-f"></i></a>
             <a href="https://www.tiktok.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-tiktok"></i></a>
             <a href="https://www.instagram.com" target="_blank" rel="noopener noreferrer"><i className="fab fa-instagram"></i></a>
-            <a href="https://wa.me/" target="_blank" rel="noopener noreferrer" onClick={handleWhatsAppClick}><i className="fab fa-whatsapp"></i></a>
+            <a
+              href={buildWhatsAppUrl()}
+              target="_blank"
+              rel="noopener noreferrer"
+              onClick={handleWhatsAppClick}
+            >
+              <i className="fab fa-whatsapp"></i>
+            </a>
           </div>
         </div>
 
@@ -35,8 +66,22 @@ export default function Footer() {
 
         <div className="footer-section">
           <h3>Contacto</h3>
-          <p><i className="fas fa-map-marker-alt"></i> Jr. San Martin # 405, Bambamarca</p>
-          <p><i className="fas fa-envelope"></i> contacto@comercialtorres.com</p>
+          <p>
+            <i className="fas fa-map-marker-alt"></i>{' '}
+            <a
+              href="https://maps.app.goo.gl/hvMhUkFXnqtEdS196"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Jr. San Martin # 405, Bambamarca
+            </a>
+          </p>
+          <p>
+            <i className="fas fa-envelope"></i>{' '}
+            <a href="mailto:comercialtorresvz@gmail.com">
+              comercialtorresvz@gmail.com
+            </a>
+          </p>
         </div>
       </div>
       <div className="footer-bottom">

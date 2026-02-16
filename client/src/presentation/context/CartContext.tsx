@@ -6,11 +6,13 @@ interface CartItem {
   price: number;
   quantity: number;
   imageUrl?: string;
+  size?: string;
+  color?: string;
 }
 
 interface CartContextType {
   cart: CartItem[];
-  addToCart: (product: { id: number; name: string; price: number; imageUrl?: string }) => void;
+  addToCart: (product: { id: number; name: string; price: number; imageUrl?: string; size?: string; color?: string }) => void;
   removeFromCart: (id: number) => void;
   toggleCart: () => void;
   isCartOpen: boolean;
@@ -32,9 +34,13 @@ export function CartProvider({ children }: { children: ReactNode }) {
     localStorage.setItem('cart', JSON.stringify(cart));
   }, [cart]);
 
-  const addToCart = (product: { id: number; name: string; price: number; imageUrl?: string }) => {
+  const addToCart = (product: { id: number; name: string; price: number; imageUrl?: string; size?: string; color?: string }) => {
     setCart(prev => {
-      const existing = prev.find(item => item.id === product.id);
+      const existing = prev.find(item => 
+        item.id === product.id &&
+        item.size === product.size &&
+        item.color === product.color
+      );
       if (existing) {
         return prev.map(item =>
           item.id === product.id

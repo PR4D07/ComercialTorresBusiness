@@ -1,0 +1,146 @@
+.product-detail.container {
+  padding: 2rem 1rem;
+}
+
+.product-detail-content {
+  display: grid;
+  grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
+  gap: 2rem;
+  margin-top: 1rem;
+}
+
+.product-detail .back-link {
+  background: none;
+  border: none;
+  color: #555;
+  font-size: 0.9rem;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.product-detail .back-link i {
+  font-size: 0.8rem;
+}
+
+.product-detail .image-column {
+  background: #f8f9fa;
+  border-radius: 8px;
+  padding: 1.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.product-detail .image-column img {
+  max-width: 100%;
+  max-height: 450px;
+  object-fit: contain;
+}
+
+.product-detail .info-column .brand {
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  color: #888;
+}
+
+.product-detail .info-column .name {
+  margin: 0.25rem 0 0.5rem;
+}
+
+.product-detail .info-column .category {
+  font-size: 0.9rem;
+  color: #777;
+  margin-bottom: 1rem;
+}
+
+.product-detail .prices {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-detail .price-old {
+  text-decoration: line-through;
+  color: #999;
+  font-size: 0.95rem;
+}
+
+.product-detail .price-new {
+  font-size: 1.4rem;
+  font-weight: 700;
+  color: #e3000f;
+}
+
+.product-detail .options {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+}
+
+.product-detail .option-group label {
+  display: block;
+  margin-bottom: 0.4rem;
+  font-weight: 600;
+}
+
+.product-detail .chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.product-detail .chip {
+  padding: 0.4rem 0.8rem;
+  border-radius: 999px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 0.85rem;
+  cursor: pointer;
+}
+
+.product-detail .chip.selected {
+  border-color: #000;
+  background: #000;
+  color: #fff;
+}
+
+.product-detail .btn-primary.full-width {
+  width: 100%;
+  margin-bottom: 0.75rem;
+}
+
+.product-detail .btn-primary.full-width.btn-missing-variant {
+  background-color: #e3000f;
+  border-color: #e3000f;
+}
+
+.product-detail .btn-primary.full-width.btn-missing-variant:hover {
+  background-color: #cc000e;
+  border-color: #cc000e;
+  color: #fff;
+}
+
+.product-detail .detail-note {
+  font-size: 0.8rem;
+  color: #777;
+}
+
+.product-detail .variant-alert {
+  margin-top: 0.5rem;
+  background-color: #ffebee;
+  color: #c62828;
+  padding: 0.75rem 1rem;
+  border-radius: 4px;
+  font-size: 0.85rem;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .product-detail-content {
+    grid-template-columns: 1fr;
+  }
+}

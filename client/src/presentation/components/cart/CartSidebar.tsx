@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 import { useCart } from '../../context/CartContext';
 import './CartSidebar.css';
 
@@ -7,6 +8,20 @@ export default function CartSidebar() {
   const navigate = useNavigate();
 
   const handleCheckout = () => {
+    if (cart.length === 0) {
+      Swal.fire({
+        title: 'Tu carrito está vacío',
+        text: 'Agrega al menos un producto antes de finalizar la compra.',
+        icon: 'info',
+        confirmButtonColor: '#E3000F',
+        confirmButtonText: 'Ver productos'
+      }).then(() => {
+        toggleCart();
+        navigate('/');
+      });
+      return;
+    }
+
     toggleCart();
     navigate('/checkout');
   };
@@ -35,6 +50,12 @@ export default function CartSidebar() {
                 </div>
                 <div className="item-details">
                   <h4>{item.name}</h4>
+                  {(item.size || item.color) && (
+                    <p className="item-variant">
+                      {item.size && <>Talla: {item.size} </>}
+                      {item.color && <>| Color: {item.color}</>}
+                    </p>
+                  )}
                   <p>S/ {item.price.toFixed(2)} x {item.quantity}</p>
                 </div>
                 <button 

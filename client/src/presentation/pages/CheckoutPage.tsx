@@ -29,7 +29,6 @@ export default function CheckoutPage() {
   useEffect(() => {
     if (!loading) {
       if (!user) {
-        // If not logged in, redirect to login page with return url
         Swal.fire({
           title: 'Inicia sesión',
           text: 'Debes iniciar sesión para finalizar tu compra.',
@@ -40,7 +39,6 @@ export default function CheckoutPage() {
           navigate('/login', { state: { from: '/checkout' } });
         });
       } else {
-        // Auto-fill user data
         const names = user.displayName ? user.displayName.split(' ') : ['', ''];
         setFormData(prev => ({
           ...prev,
@@ -51,6 +49,20 @@ export default function CheckoutPage() {
       }
     }
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (!loading && user && cart.length === 0) {
+      Swal.fire({
+        title: 'Tu carrito está vacío',
+        text: 'Agrega al menos un producto antes de finalizar tu compra.',
+        icon: 'info',
+        confirmButtonColor: '#E3000F',
+        confirmButtonText: 'Ver productos'
+      }).then(() => {
+        navigate('/');
+      });
+    }
+  }, [cart.length, loading, user, navigate]);
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({
@@ -152,6 +164,10 @@ export default function CheckoutPage() {
 
   // If user is not logged in, we render nothing while redirecting (handled by useEffect)
   if (!user) {
+    return null;
+  }
+
+  if (cart.length === 0) {
     return null;
   }
 
