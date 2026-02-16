@@ -32,6 +32,32 @@ const AboutPage: React.FC = () => {
       source: 'about_page',
       link_url: url
     });
+
+    try {
+      let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+      if (apiUrl.endsWith('/')) {
+        apiUrl = apiUrl.slice(0, -1);
+      }
+      if (!apiUrl.endsWith('/api') && !apiUrl.includes('localhost')) {
+        apiUrl += '/api';
+      }
+
+      void fetch(`${apiUrl}/events`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          event_type: 'whatsapp_click',
+          metadata: {
+            source: 'about_page',
+            link_url: url
+          }
+        })
+      });
+    } catch (err) {
+      console.error('Error tracking WhatsApp click event', err);
+    }
   };
 
   return (

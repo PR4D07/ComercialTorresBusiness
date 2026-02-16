@@ -5,7 +5,7 @@ export interface Event {
     user_id?: string;
     customer_id?: string;
     product_id?: number;
-    event_type: 'view_product' | 'add_to_cart' | 'purchase' | 'search' | 'login' | 'logout';
+    event_type: 'view_product' | 'add_to_cart' | 'purchase' | 'search' | 'login' | 'logout' | 'whatsapp_click';
     metadata?: any;
     timestamp?: Date;
 }

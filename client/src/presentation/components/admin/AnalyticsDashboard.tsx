@@ -80,7 +80,7 @@ export default function AnalyticsDashboard() {
                     <h3>Resumen de Métricas del Sitio</h3>
                     {kpis && (
                         <p className="analytics-subtitle">
-                            Datos de Google Analytics entre <strong>{kpis.startDate}</strong> y <strong>{kpis.endDate}</strong>.
+                            Datos de actividad del sitio entre <strong>{kpis.startDate}</strong> y <strong>{kpis.endDate}</strong>.
                         </p>
                     )}
                 </div>
