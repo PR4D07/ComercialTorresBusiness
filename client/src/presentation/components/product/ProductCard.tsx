@@ -4,10 +4,9 @@ import './ProductCard.css';
 
 interface ProductCardProps {
   product: Product;
-  onAddToCart: () => void;
 }
 
-export function ProductCard({ product, onAddToCart }: ProductCardProps) {
+export function ProductCard({ product }: ProductCardProps) {
   const navigate = useNavigate();
 
   const handleOpenDetail = () => {
@@ -34,7 +33,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
         )}
       </div>
       <div className="product-info">
-        <span className="brand">{product.brand}</span>
+        <span className="brand">COMERCIAL TORRES</span>
         <h3 className="product-name">{product.name}</h3>
         <div className="prices">
           {product.priceOld && (
@@ -46,7 +45,7 @@ export function ProductCard({ product, onAddToCart }: ProductCardProps) {
           className="btn-add"
           onClick={(e) => {
             e.stopPropagation();
-            onAddToCart();
+            handleOpenDetail();
           }}
         >
           AGREGAR AL CARRITO

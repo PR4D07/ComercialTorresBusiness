@@ -10,6 +10,20 @@ interface KPIs {
     endDate: string;
 }
 
+const resolveApiBaseUrl = () => {
+    let url = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+
+    if (url.endsWith('/')) {
+        url = url.slice(0, -1);
+    }
+
+    if (!url.endsWith('/api') && !url.includes('localhost')) {
+        url += '/api';
+    }
+
+    return url;
+};
+
 export default function AnalyticsDashboard() {
     const [kpis, setKpis] = useState<KPIs | null>(null);
     const [loading, setLoading] = useState(true);
@@ -17,18 +31,18 @@ export default function AnalyticsDashboard() {
     const [range, setRange] = useState('30daysAgo');
 
     useEffect(() => {
-        fetchKPIs(range);
+        void fetchKPIs(range);
     }, [range]);
 
     const fetchKPIs = async (dateRange: string) => {
         setLoading(true);
         setError(null);
         try {
-            const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-            const res = await fetch(`${apiUrl}/api/analytics/kpis?startDate=${dateRange}&endDate=today`);
-            
+            const apiBaseUrl = resolveApiBaseUrl();
+            const res = await fetch(`${apiBaseUrl}/analytics/kpis?startDate=${dateRange}&endDate=today`);
+
             if (!res.ok) throw new Error('Error al cargar métricas');
-            
+
             const data = await res.json();
             setKpis(data);
         } catch (err) {

@@ -1,4 +1,4 @@
-import { StrictMode, useState, useEffect, Component, type ReactNode } from 'react'
+import { StrictMode, useState, useEffect, Component, type ReactNode, type ComponentType } from 'react'
 import { createRoot } from 'react-dom/client'
 import './index.css'
 
@@ -9,24 +9,40 @@ if (isProd && gaId) {
   script.async = true
   script.src = `https://www.googletagmanager.com/gtag/js?id=${gaId}`
   document.head.appendChild(script)
-  ;(window as any).dataLayer = (window as any).dataLayer || []
-  ;(window as any).gtag = function () { (window as any).dataLayer.push(arguments) }
-  ;(window as any).gtag('js', new Date())
-  ;(window as any).gtag('config', gaId)
+
+  type DataLayerArgs = [key: string, ...rest: unknown[]]
+
+  interface AnalyticsWindow extends Window {
+    dataLayer?: unknown[]
+    gtag?: (...args: DataLayerArgs) => void
+  }
+
+  const win = window as AnalyticsWindow
+  win.dataLayer = win.dataLayer || []
+  win.gtag = (...args: DataLayerArgs) => {
+    win.dataLayer?.push(args)
+  }
+  win.gtag('js', new Date())
+  win.gtag('config', gaId)
 }
 
 // ErrorBoundary para capturar errores de renderizado
-class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boolean, error: any }> {
+interface ErrorBoundaryState {
+  hasError: boolean
+  error: Error | null
+}
+
+class ErrorBoundary extends Component<{ children: ReactNode }, ErrorBoundaryState> {
   constructor(props: { children: ReactNode }) {
     super(props);
     this.state = { hasError: false, error: null };
   }
 
-  static getDerivedStateFromError(error: any) {
+  static getDerivedStateFromError(error: Error): ErrorBoundaryState {
     return { hasError: true, error };
   }
 
-  componentDidCatch(error: any, errorInfo: any) {
+  componentDidCatch(error: Error, errorInfo: unknown) {
     console.error("Uncaught error:", error, errorInfo);
   }
 
@@ -47,9 +63,11 @@ class ErrorBoundary extends Component<{ children: ReactNode }, { hasError: boole
 }
 
 // AppLoader para capturar errores de importación/evaluación de módulos
+type AppComponentType = ComponentType | null
+
 function AppLoader() {
-  const [AppModule, setAppModule] = useState<any>(null);
-  const [loadError, setLoadError] = useState<any>(null);
+  const [AppModule, setAppModule] = useState<AppComponentType>(null);
+  const [loadError, setLoadError] = useState<unknown>(null);
 
   useEffect(() => {
     console.log("Iniciando carga dinámica de App.tsx...");
@@ -71,9 +89,7 @@ function AppLoader() {
         <p>No se pudo iniciar la aplicación debido a un error en el código.</p>
         <div style={{ background: 'rgba(0,0,0,0.3)', padding: 15, borderRadius: 5, overflow: 'auto', margin: '15px 0' }}>
           <strong>Detalle del error:</strong>
-          <pre style={{ whiteSpace: 'pre-wrap' }}>{loadError.toString()}</pre>
-          {loadError.message && <p>{loadError.message}</p>}
-          {loadError.stack && <pre style={{ fontSize: '0.8em', marginTop: 10 }}>{loadError.stack}</pre>}
+          <pre style={{ whiteSpace: 'pre-wrap' }}>{String(loadError)}</pre>
         </div>
         <p>Verifica la consola del navegador (F12) para más detalles técnicos.</p>
         <button onClick={() => window.location.reload()} style={{ padding: '10px 20px', cursor: 'pointer' }}>Intentar de nuevo</button>

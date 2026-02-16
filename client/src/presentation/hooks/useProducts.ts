@@ -14,17 +14,28 @@ export function useProducts() {
   const { search, category } = useFilter();
 
   useEffect(() => {
+    let isCancelled = false;
     setLoading(true);
+    setError(null);
+
     repository.getProducts({ search, category })
       .then(data => {
+        if (isCancelled) return;
         setProducts(data);
-        setLoading(false);
       })
       .catch(err => {
+        if (isCancelled) return;
         console.error('Error fetching products:', err);
         setError('Error al cargar productos');
+      })
+      .finally(() => {
+        if (isCancelled) return;
         setLoading(false);
       });
+
+    return () => {
+      isCancelled = true;
+    };
   }, [search, category]);
 
   return { products, loading, error, search, category };

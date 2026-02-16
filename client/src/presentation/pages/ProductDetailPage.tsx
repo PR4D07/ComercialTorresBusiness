@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { Product } from '../../domain/models/Product';
 import { useCart } from '../context/CartContext';
+import Swal from 'sweetalert2';
 import './ProductDetailPage.css';
 
 export default function ProductDetailPage() {
@@ -23,8 +24,11 @@ export default function ProductDetailPage() {
       setLoading(true);
       setError(null);
       try {
-        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000';
-        const res = await fetch(`${apiUrl}/api/products/${id}`);
+        let apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:3000/api';
+        if (apiUrl.endsWith('/')) {
+          apiUrl = apiUrl.slice(0, -1);
+        }
+        const res = await fetch(`${apiUrl}/products/${id}`);
         if (!res.ok) {
           throw new Error('No se pudo cargar el producto');
         }
@@ -45,6 +49,12 @@ export default function ProductDetailPage() {
     if (!product) return;
     if (!size || !color) {
       setValidationError('Debes seleccionar la talla y el color antes de agregar al carrito.');
+      Swal.fire({
+        icon: 'warning',
+        title: 'Selecciona talla y color',
+        text: 'Debes seleccionar la talla y el color antes de agregar el producto al carrito.',
+        confirmButtonText: 'Entendido'
+      });
       return;
     }
 
@@ -92,7 +102,7 @@ export default function ProductDetailPage() {
           )}
         </div>
         <div className="info-column">
-          <span className="brand">{product.brand}</span>
+          <span className="brand">COMERCIAL TORRES</span>
           <h1 className="name">{product.name}</h1>
           {product.category && (
             <p className="category">Categoría: {product.category}</p>
@@ -151,11 +161,6 @@ export default function ProductDetailPage() {
               {validationError}
             </div>
           )}
-
-          <p className="detail-note">
-            Selecciona la talla y color antes de agregar al carrito. 
-            Por ahora la compra se concreta en tienda, pero esta información ayuda a reservar el producto ideal.
-          </p>
         </div>
       </div>
     </div>

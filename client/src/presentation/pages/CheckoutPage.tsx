@@ -10,7 +10,7 @@ import './CheckoutPage.css';
 
 export default function CheckoutPage() {
   const navigate = useNavigate();
-  const { cart, total, addToCart, clearCart } = useCart();
+  const { cart, total, clearCart } = useCart();
   const { products } = useProducts();
   const { user, loading } = useAuth();
   
@@ -278,6 +278,17 @@ export default function CheckoutPage() {
               </div>
             </div>
             
+            <div className="pickup-notice">
+              <div className="pickup-icon">
+                <i className="fas fa-store" />
+              </div>
+              <div className="pickup-text">
+                <strong>Importante:</strong> Actualmente no realizamos delivery.
+                <br />
+                Todos los pedidos se recogen en tienda: Jr. San Martín # 405, Bambamarca.
+              </div>
+            </div>
+
             <button type="submit" className="pay-btn">
               Pagar S/ {total.toFixed(2)}
             </button>
@@ -316,13 +327,7 @@ export default function CheckoutPage() {
             {recommendations.map(product => (
               <ProductCard 
                 key={product.id} 
-                product={product} 
-                onAddToCart={() => addToCart({
-                  id: product.id,
-                  name: product.name,
-                  price: product.priceNew,
-                  imageUrl: product.imageUrl
-                })}
+                product={product}
               />
             ))}
           </div>

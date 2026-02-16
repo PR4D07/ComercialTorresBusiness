@@ -100,7 +100,15 @@ export default function UserPanelPage() {
   );
 }
 
-function UserProfile({ user }: { user: any }) {
+interface UserProfileProps {
+  user: {
+    displayName: string | null;
+    email: string | null;
+    phoneNumber?: string | null;
+  };
+}
+
+function UserProfile({ user }: UserProfileProps) {
   return (
     <div className="panel-section">
       <h2>Mi Perfil</h2>
