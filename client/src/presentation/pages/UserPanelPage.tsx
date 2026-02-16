@@ -115,11 +115,11 @@ function UserProfile({ user }: UserProfileProps) {
       <form className="user-form" onSubmit={(e) => e.preventDefault()}>
         <div className="form-group">
           <label>Nombre Completo</label>
-          <input type="text" defaultValue={user.displayName} />
+          <input type="text" defaultValue={user.displayName ?? ''} />
         </div>
         <div className="form-group">
           <label>Correo Electrónico</label>
-          <input type="email" defaultValue={user.email} disabled />
+          <input type="email" defaultValue={user.email ?? ''} disabled />
         </div>
         <div className="form-group">
           <label>Teléfono</label>
